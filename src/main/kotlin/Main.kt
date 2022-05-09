@@ -5,6 +5,7 @@ import com.github.kinquirer.components.promptList
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import java.io.File
 import kotlin.system.exitProcess
 
 
@@ -34,7 +35,13 @@ fun createInvasion() {
     val name = KInquirer.promptInput(message = "What should the siege name be?")
 
     json.add(id, buildMain(name))
-    println(gson.toJson(json))
+
+    val output = gson.toJson(json)
+
+    println(output)
+
+    File("${id}.json").printWriter().use { out -> out.println(output) }
+    println("\nWrote invasion file to ${id}.json")
 }
 
 fun buildMain(name: String): JsonObject {
@@ -179,7 +186,7 @@ fun buildMessages(): JsonObject {
         )
 
         warn.addProperty(
-            "ticks",
+            "message",
             KInquirer.promptInput(message = "What warning message should a player receive before siege start??")
         )
 
@@ -347,7 +354,9 @@ fun promptArray(prompt: String): JsonArray {
         try {
             jsonArray.add(s.toInt())
         } catch (e: java.lang.NumberFormatException) {
-            jsonArray.add(s)
+            if (s.isNotEmpty()) {
+                jsonArray.add(s)
+            }
         }
     }
 
