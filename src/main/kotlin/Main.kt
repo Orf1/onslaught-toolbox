@@ -7,15 +7,19 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlin.system.exitProcess
 
+
 fun main() {
     val version = "v1.0.0"
     println("Welcome to Invasion Toolbox $version")
+
     when (KInquirer.promptList(
         message = "What would you like to generate?",
         choices = listOf("New Invasion", "New Mob", "Exit")
     )) {
         "New Invasion" -> createInvasion()
+
         "New Mob" -> newMob()
+
         "Exit" -> {
             exitProcess(1)
         }
@@ -61,12 +65,15 @@ fun buildMain(name: String): JsonObject {
 fun buildSelector(): JsonObject {
     fun buildGamestages(): JsonObject {
         val selectorGamestages = JsonObject()
+
         selectorGamestages.add("and", promptArray("Please enter a comma separated list of required game stages:"))
+
         return selectorGamestages
     }
 
     fun buildDimension(): JsonObject {
         val selectorDimension = JsonObject()
+
         selectorDimension.addProperty(
             "type",
             KInquirer.promptList(
@@ -78,6 +85,7 @@ fun buildSelector(): JsonObject {
             "dimensions",
             promptArray("Please enter a comma seperated list of dimensions you want to add to this list:")
         )
+
         return selectorDimension
     }
 
@@ -120,16 +128,20 @@ fun buildCommands(): JsonObject {
             )) {
                 "Add" -> {
                     val stagedElement = JsonObject()
+
                     stagedElement.addProperty(
                         "complete",
                         KInquirer.promptInputNumber(message = "What would you like complete value to be?")
                     )
+
                     stagedElement.add(
                         "commands",
                         promptArray("Please enter a comma seperated list of commands to add.")
                     )
+
                     staged.add(stagedElement)
                 }
+
                 "Done" -> {
                     break
                 }
@@ -165,6 +177,7 @@ fun buildMessages(): JsonObject {
             "ticks",
             KInquirer.promptInput(message = "How many ticks before should a player be warned before siege start?")
         )
+
         warn.addProperty(
             "ticks",
             KInquirer.promptInput(message = "What warning message should a player receive before siege start??")
@@ -251,8 +264,10 @@ fun buildWaves(): JsonArray {
                     mob.addProperty("id", KInquirer.promptInput("What is the mob id?"))
                     mob.add("count", promptArray("What should the count be? (You can use commas for multiple numbers)"))
                     mob.add("spawn", buildSpawn())
+
                     mobs.add(mob)
                 }
+
                 "Done" -> {
                     break
                 }
@@ -272,6 +287,7 @@ fun buildWaves(): JsonArray {
             )) {
                 "Add Group" -> {
                     val group = JsonObject()
+
                     group.addProperty("weight", KInquirer.promptInputNumber("What should the group weight be?"))
                     group.addProperty(
                         "forceSpawn",
@@ -281,8 +297,10 @@ fun buildWaves(): JsonArray {
                         )
                     )
                     group.add("mobs", buildMobs())
+
                     groups.add(group)
                 }
+
                 "Done" -> {
                     break
                 }
@@ -298,10 +316,13 @@ fun buildWaves(): JsonArray {
         )) {
             "New Wave" -> {
                 val wave = JsonObject()
+
                 wave.add("delayTicks", promptArray("How many delay ticks should this wave have?"))
                 wave.add("groups", buildGroups())
+
                 waves.add(wave)
             }
+
             "Done" -> {
                 break
             }
